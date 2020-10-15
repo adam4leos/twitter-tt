@@ -149,18 +149,22 @@ const TicTacToe = (function () {
         break;
 
       case KEY_CODES.LEFT:
+      case KEY_CODES.A:
         moveLeft();
         break;
 
       case KEY_CODES.UP:
+      case KEY_CODES.W:
         moveUp();
         break;
 
       case KEY_CODES.RIGHT:
+      case KEY_CODES.D:
         moveRight();
         break;
 
       case KEY_CODES.DOWN:
+      case KEY_CODES.S:
         moveDown();
         break;
 
