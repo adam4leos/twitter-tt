@@ -1,7 +1,13 @@
 const Focus = (function () {
   const { cells } = DOMContent;
   const { FIRST_CELL_INDEX } = Constants;
+  const { isCellNode, isCellVisited } = ValidationChecks;
+
   let currentFocusIndex = FIRST_CELL_INDEX;
+
+  const preventFocusLose = () => {
+    // TODO remove TAB functionality and return it
+  };
 
   const focusCellByIndex = (index) => {
     currentFocusIndex = index;
@@ -21,5 +27,11 @@ const Focus = (function () {
 
   const getCurrentFocusIndex = () => currentFocusIndex;
 
-  return { changeFocus, focusCellByIndex, focusFirstCell, getCurrentFocusIndex };
+  return {
+    changeFocus,
+    focusCellByIndex,
+    focusFirstCell,
+    getCurrentFocusIndex,
+    preventFocusLose,
+  };
 })();

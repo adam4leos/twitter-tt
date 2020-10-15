@@ -1,8 +1,8 @@
 const Navigation = (function () {
+  const { LAST_CELL_INDEX, FIRST_CELL_INDEX, BOARD_SIZE } = Constants;
   const { focusCellByIndex, getCurrentFocusIndex } = Focus;
 
   const moveRight = () => {
-      console.log(Focus)
     let newIndex = getCurrentFocusIndex() + 1;
 
     if (newIndex > LAST_CELL_INDEX) newIndex = FIRST_CELL_INDEX;

@@ -4,37 +4,34 @@
 // TODO improve winning combination logic
 // TODO support dynamic settings
 
-const {
-  BOARD_SIZE,
-  PLAYING_CELLS,
-  PLAYER_MARKS,
-  CELL_CLASSES,
-  GAME_MESSAGES,
-  WINNING_SETS,
-  KEY_CODES,
-  FIRST_CELL_INDEX,
-  LAST_CELL_INDEX,
-} = Constants;
-const { moveDown, moveLeft, moveRight, moveUp } = Navigation;
-const {
-  isCellNode,
-  isCellVisited,
-  isPlayerChoiceWithinGameRange,
-  isNewGameButton,
-} = ValidationChecks;
-const { changeFocus, focusFirstCell } = Focus;
-
-const { board, modal, cells, startNewGameButton } = DOMContent;
-
 const TicTacToe = (function () {
-  const game = {};
+  const {
+    BOARD_SIZE,
+    PLAYING_CELLS,
+    PLAYER_MARKS,
+    CELL_CLASSES,
+    GAME_MESSAGES,
+    WINNING_SETS,
+    KEY_CODES,
+  } = Constants;
+  const {
+    isCellNode,
+    isCellVisited,
+    isPlayerChoiceWithinGameRange,
+    isNewGameButton,
+  } = ValidationChecks;
+  const { moveDown, moveLeft, moveRight, moveUp } = Navigation;
+  const { board, modal, cells } = DOMContent;
+  const { hideModal, showMessage } = Modal;
+  const { changeFocus, focusFirstCell } = Focus;
+  const { drawMark, drawPreviewMark, removePreviewMark } = Marks;
 
   // private variables
+  const game = {};
   const ownership = {
     [PLAYER_MARKS.X]: [],
     [PLAYER_MARKS.O]: [],
   };
-
   let currentPlayer = PLAYER_MARKS.X;
 
   // private methods
@@ -58,19 +55,6 @@ const TicTacToe = (function () {
     ownership[PLAYER_MARKS.X].length + ownership[PLAYER_MARKS.O].length ===
     PLAYING_CELLS;
 
-  const showMessage = (heading, message) => {
-    modal.querySelector('.modal-heading').innerHTML = heading;
-    modal.querySelector('.modal-text').innerHTML = message;
-
-    modal.showModal();
-    startNewGameButton.focus();
-    preventFocusLose(); // TODO block all focus changes
-  };
-
-  const hideModal = () => {
-    modal.close();
-  };
-
   const resetGameCellsClasses = () => {
     for (let i = 0, length = cells.length; i < length; i++) {
       cells[i].className = CELL_CLASSES.CELL;
@@ -89,7 +73,7 @@ const TicTacToe = (function () {
     focusFirstCell();
   };
 
-  function hasCurrentPlayerWon() {
+  const hasCurrentPlayerWon = () => {
     const ownedCells = ownership[currentPlayer];
 
     if (ownedCells.length < BOARD_SIZE) {
@@ -119,36 +103,6 @@ const TicTacToe = (function () {
     ownership[player].push(choice);
   };
 
-  const drawMark = (cell) => {
-    if (
-      !isCellNode(cell) ||
-      isCellVisited(cell) ||
-      !isPlayerExistsInGame(currentPlayer)
-    )
-      return;
-    cell.classList.add(CELL_CLASSES[currentPlayer], CELL_CLASSES.VISITED);
-  };
-
-  const drawPreviewMark = (cell) => {
-    if (
-      !isCellNode(cell) ||
-      isCellVisited(cell) ||
-      !isPlayerExistsInGame(currentPlayer)
-    )
-      return;
-    cell.classList.add(CELL_CLASSES[currentPlayer]);
-  };
-
-  const removePreviewMark = (cell) => {
-    if (
-      !isCellNode(cell) ||
-      isCellVisited(cell) ||
-      !isPlayerExistsInGame(currentPlayer)
-    )
-      return;
-    cell.classList.remove(CELL_CLASSES[currentPlayer]);
-  };
-
   const updateCellField = (cell) => {
     if (!isCellNode(cell) || isCellVisited(cell)) return;
 
@@ -164,11 +118,10 @@ const TicTacToe = (function () {
     updateCellField(target);
   };
 
-  // TODO here
   const onBoardMouseOverHandler = ({ target }) => {
     drawPreviewMark(target);
     changeFocus(target);
-  }
+  };
 
   const onBoardMouseOutHandler = ({ target }) => {
     removePreviewMark(target);
@@ -183,12 +136,6 @@ const TicTacToe = (function () {
 
     resetGame();
     hideModal();
-  };
-
-
-  const preventFocusLose = () => {
-    // TODO remove TAB functionality and return it
-    //console.log('123')
   };
 
   const onGlobalKeyPressHandler = (e) => {
@@ -254,13 +201,15 @@ const TicTacToe = (function () {
   };
 
   // public methods
-  game.start = function() {
+  game.start = () => {
     addEventListeners();
   };
 
-  game.reset = function() {
+  game.reset = () => {
     resetGame();
-  }
+  };
+
+  game.getCurrentPlayer = () => currentPlayer;
 
   return game;
 })();
