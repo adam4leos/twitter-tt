@@ -1,0 +1,89 @@
+body {
+  color: #444;
+  font-family: sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  width: 960px;
+}
+
+.board {
+  border: 1px solid #f3c;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  align-items: center;
+  background: #efefef;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  height: 100px;
+  justify-content: center;
+  width: 100px;
+}
+
+.cell:nth-child(2n) {
+  background: #fff;
+}
+
+.cell:hover,
+.cell:focus {
+  border-color: #f3c;
+}
+
+.cell:hover:not(.visited),
+.cell:focus:not(.visited) {
+  background-color: rgba(255,51,204, .3);
+}
+
+.cell.visited {
+  background: #ccc;
+  border-color: #aaa;
+}
+
+.cell.x:before {
+  content: "x";
+}
+
+.cell.o:before {
+  content: "o";
+}
+
+.modal {
+  text-align: center;
+  border: none;
+  padding: 2rem;
+  border-radius: 6px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.1), 0 0 10px rgba(0,0,0,0.25);
+  max-width: 90vw;
+}
+
+.modal[open] {
+  animation: appear .25s cubic-bezier(0, 1.8, 1, 1.8);
+}
+
+.modal::backdrop {
+  background: linear-gradient(45deg, rgba(0,143,104,.5), rgba(250,224,66,.5));
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateX(-3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

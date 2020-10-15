@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>Tic Tac Toe</h1>
+      <div id="board" class="board">
+        <div class="row">
+          <div class="cell" data-id="1" tabindex="1"></div>
+          <div class="cell" data-id="2" tabindex="2"></div>
+          <div class="cell" data-id="3" tabindex="3"></div>
+        </div>
+        <div class="row">
+          <div class="cell" data-id="4" tabindex="4"></div>
+          <div class="cell" data-id="5" tabindex="5"></div>
+          <div class="cell" data-id="6" tabindex="6"></div>
+        </div>
+        <div class="row">
+          <div class="cell" data-id="7" tabindex="7"></div>
+          <div class="cell" data-id="8" tabindex="8"></div>
+          <div class="cell" data-id="9" tabindex="9"></div>
+        </div>
+      </div>
+      <dialog class="modal" id="modal" open>
+        <h3 class="modal-heading">Tic Tac Toe Game</h3>
+        <p class="modal-text">Press 'Start New Game' button to start a game!</p>
+        <button class="modal-button" id="start-new-game-button" tabindex="-1" autofocus>Start New Game</button>
+      </dialog>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
