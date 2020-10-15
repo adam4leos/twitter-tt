@@ -36,12 +36,10 @@ body {
   background: #fff;
 }
 
-.cell:hover,
 .cell:focus {
   border-color: #f3c;
 }
 
-.cell:hover:not(.visited),
 .cell:focus:not(.visited) {
   background-color: rgba(255,51,204, .3);
 }
