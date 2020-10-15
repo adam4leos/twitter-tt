@@ -5,66 +5,44 @@
 // TODO support dynamic settings
 
 const TicTacToe = (function () {
-  const {
-    BOARD_SIZE,
-    PLAYING_CELLS,
-    PLAYER_MARKS,
-    CELL_CLASSES,
-    GAME_MESSAGES,
-    WINNING_SETS,
-    KEY_CODES,
-  } = Constants;
-  const {
-    isCellNode,
-    isCellVisited,
-    isPlayerChoiceWithinGameRange,
-    isNewGameButton,
-  } = ValidationChecks;
+  const { CELL_CLASSES, GAME_MESSAGES, KEY_CODES } = Constants;
+  const { isCellNode, isCellVisited, isNewGameButton } = ValidationChecks;
   const { moveDown, moveLeft, moveRight, moveUp } = Navigation;
   const { board, modal, cells } = DOMContent;
   const { hideModal, showMessage } = Modal;
   const { changeFocus, focusFirstCell } = Focus;
   const { drawMark, drawPreviewMark, removePreviewMark } = Marks;
+  const {
+    toggleCurrentPlayer,
+    updatePlayerChoices,
+    resetPlayersChoices,
+    getCurrentPlayer,
+  } = Player;
+  const { hasCurrentPlayerWon, hasNoWinner } = WinLogic;
 
   // private variables
   const game = {};
-  const ownership = {
-    [PLAYER_MARKS.X]: [],
-    [PLAYER_MARKS.O]: [],
-  };
-  let currentPlayer = PLAYER_MARKS.X;
 
-  // private methods
-  const isPlayerExistsInGame = (player) => ownership[player] !== undefined;
-
-  // TODO improve turnend conditions check
-  function endGameIfOver() {
+  // Private methods
+  // End game checks
+  const endGameIfOver = () => {
     if (hasCurrentPlayerWon()) {
       showMessage(
         GAME_MESSAGES.GAME_FINISHED_HEADING,
-        `Player ${currentPlayer} has won!`
+        `Player ${getCurrentPlayer()} has won!`
       );
     } else if (hasNoWinner()) {
       showMessage(GAME_MESSAGES.GAME_FINISHED_HEADING, GAME_MESSAGES.DRAW_TEXT);
     } else {
       toggleCurrentPlayer();
     }
-  }
+  };
 
-  const hasNoWinner = () =>
-    ownership[PLAYER_MARKS.X].length + ownership[PLAYER_MARKS.O].length ===
-    PLAYING_CELLS;
-
+  // Game reset
   const resetGameCellsClasses = () => {
     for (let i = 0, length = cells.length; i < length; i++) {
       cells[i].className = CELL_CLASSES.CELL;
     }
-  };
-
-  const resetPlayersChoices = () => {
-    Object.keys(ownership).forEach((ownershipKey) => {
-      ownership[ownershipKey] = [];
-    });
   };
 
   const resetGame = () => {
@@ -73,47 +51,19 @@ const TicTacToe = (function () {
     focusFirstCell();
   };
 
-  const hasCurrentPlayerWon = () => {
-    const ownedCells = ownership[currentPlayer];
-
-    if (ownedCells.length < BOARD_SIZE) {
-      return false;
-    }
-
-    return (
-      WINNING_SETS.filter(function (set) {
-        return (
-          set.filter(function (num) {
-            return ownedCells.indexOf(num) >= 0;
-          }).length >= BOARD_SIZE
-        );
-      }).length > 0
-    );
-  }
-
-  const toggleCurrentPlayer = () => {
-    currentPlayer =
-      currentPlayer === PLAYER_MARKS.X ? PLAYER_MARKS.O : PLAYER_MARKS.X;
-  };
-
-  const updatePlayerChoices = (player, choice) => {
-    if (!isPlayerExistsInGame(player) || !isPlayerChoiceWithinGameRange(choice))
-      return;
-
-    ownership[player].push(choice);
-  };
-
+  // Game behaviour
   const updateCellField = (cell) => {
     if (!isCellNode(cell) || isCellVisited(cell)) return;
 
     drawMark(cell);
     updatePlayerChoices(
-      currentPlayer,
+      getCurrentPlayer(),
       parseInt(cell.getAttribute('data-id'), 10)
     );
     endGameIfOver();
   };
 
+  // Event handlers
   const onBoardClickHandler = ({ target }) => {
     updateCellField(target);
   };
@@ -175,6 +125,7 @@ const TicTacToe = (function () {
     e.preventDefault(); // prevent the default action (scroll / move caret)
   };
 
+  // Event Listeners
   const addModalEventListeners = () => {
     modal.addEventListener('cancel', onModalCancelHandler);
     modal.addEventListener('click', onStartNewGameClickHandler);
@@ -204,7 +155,7 @@ const TicTacToe = (function () {
     addKeyboardEventListeners();
   };
 
-  // public methods
+  // Public methods
   game.start = () => {
     addEventListeners();
   };
@@ -212,8 +163,6 @@ const TicTacToe = (function () {
   game.reset = () => {
     resetGame();
   };
-
-  game.getCurrentPlayer = () => currentPlayer;
 
   return game;
 })();

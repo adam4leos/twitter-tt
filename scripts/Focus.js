@@ -17,12 +17,13 @@ const Focus = (function () {
   const changeFocus = (newFocusTarget) => {
     if (!isCellNode(newFocusTarget) || isCellVisited(newFocusTarget)) return;
 
-    const id = parseInt(newFocusTarget.getAttribute('data-id'), 10);
-    focusCellByIndex(id - 1);
+    // cellID - starts from 1, so -1 will give 0 base index
+    const cellIndex = parseInt(newFocusTarget.getAttribute('data-id'), 10) - 1;
+    focusCellByIndex(cellIndex);
   };
 
   const focusFirstCell = () => {
-    cells[0].focus();
+    cells[FIRST_CELL_INDEX].focus();
   };
 
   const getCurrentFocusIndex = () => currentFocusIndex;
